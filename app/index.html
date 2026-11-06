@@ -145,17 +145,76 @@
             </div>
         </section>
 
+        
         <section id="details-panel" class="details-panel" hidden>
-            <div class="section-heading">
-                <div>
-                    <p class="eyebrow">GOLD PURITY DETAILS</p>
-                    <h3 id="detail-title">24K Gold</h3>
-                    <p id="detail-purity"></p>
-                </div>
-                <button class="text-btn" onclick="closeDetails()">Close ✕</button>
+            <div class="sheet-handle"></div>
+            <div class="sheet-topline">
+                <span class="sheet-label">GM MARKET INTELLIGENCE</span>
+                <button class="sheet-close" onclick="closeDetails()" aria-label="Close">✕</button>
             </div>
-            <p class="muted">The live rate will appear here after API integration.</p>
+            <div class="gold-detail-hero">
+                <div class="detail-gold-icon">Au</div>
+                <div>
+                    <p class="eyebrow">GOLD PURITY</p>
+                    <h2 id="detail-title">24K Gold</h2>
+                    <p class="detail-subtitle" id="detail-description">999 Fine Gold</p>
+                </div>
+                <span class="purity-seal" id="detail-seal">999</span>
+            </div>
+            <div class="detail-price-card">
+                <div>
+                    <span class="detail-caption">CURRENT MARKET RATE</span>
+                    <div class="detail-price" id="detail-rate">—</div>
+                    <span class="detail-unit">Indian Rupees / gram</span>
+                </div>
+                <span class="rate-status">Awaiting live data</span>
+            </div>
+            <div class="weight-heading">
+                <strong>Estimated metal value</strong>
+                <span>By weight</span>
+            </div>
+            <div class="weight-grid">
+                <div><span>1 gram</span><strong id="value-1">—</strong></div>
+                <div><span>5 grams</span><strong id="value-5">—</strong></div>
+                <div><span>10 grams</span><strong id="value-10">—</strong></div>
+            </div>
+            <p class="detail-disclaimer">Indicative metal value only. Taxes, making charges and other applicable costs are not included. Live market data is not connected yet.</p>
+            <button class="detail-primary-btn" onclick="openGoldFullDetails()">View Full Details <span>→</span></button>
         </section>
+
+        <section id="gold-full-page" class="gold-full-page" hidden>
+            <header class="full-page-header">
+                <button onclick="closeGoldFullDetails()" class="full-back">←</button>
+                <div><span>GM</span><strong>Gold Details</strong></div>
+                <span class="full-header-tag">MARKET</span>
+            </header>
+            <div class="full-page-content">
+                <p class="eyebrow">PRECIOUS METALS / GOLD</p>
+                <div class="full-gold-heading">
+                    <div class="detail-gold-icon large">Au</div>
+                    <div><h1 id="full-detail-title">24K Gold</h1><p id="full-detail-subtitle">999 Fine Gold</p></div>
+                </div>
+                <div class="full-rate-card">
+                    <span class="detail-caption">LATEST MARKET RATE</span>
+                    <strong id="full-detail-rate">—</strong>
+                    <span>INR per gram · Live rate unavailable</span>
+                </div>
+                <h3>Value by weight</h3>
+                <div class="full-value-list">
+                    <div><span>1 gram</span><strong id="full-value-1">—</strong></div>
+                    <div><span>5 grams</span><strong id="full-value-5">—</strong></div>
+                    <div><span>10 grams</span><strong id="full-value-10">—</strong></div>
+                </div>
+                <h3>Purity information</h3>
+                <div class="purity-info-card">
+                    <div><span>Purity hallmark</span><strong id="full-purity">999</strong></div>
+                    <div><span>Metal</span><strong>Gold (Au)</strong></div>
+                    <div><span>Pricing unit</span><strong>Indian Rupees / gram</strong></div>
+                </div>
+                <p class="detail-disclaimer">Rates are currently awaiting live API integration. Values shown here are not a confirmed market quote. Final jewellery prices may include taxes, making charges and other costs.</p>
+            </div>
+        </section>
+
 
         <section id="other-panel" class="details-panel" hidden>
             <div class="section-heading">

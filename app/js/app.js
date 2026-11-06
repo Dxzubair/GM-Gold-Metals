@@ -7,23 +7,64 @@ const goldPurities = {
     '10K': { purity: '417', id: 'rate-10' }
 };
 
+function formatGoldValue(value) {
+    return Number.isFinite(value)
+        ? '₹' + value.toLocaleString('en-IN', { maximumFractionDigits: 2 })
+        : '—';
+}
+
 function showDetails(karat, purity) {
     const panel = document.getElementById('details-panel');
-    const rate = document.getElementById(goldPurities[karat]?.id);
+    const rateElement = document.getElementById(goldPurities[karat]?.id);
+    const rawRate = rateElement?.textContent.trim() || '';
+    const numericRate = Number(rawRate.replace(/[^0-9.]/g, ''));
+    const validRate = rawRate !== '—' && rawRate !== '' && Number.isFinite(numericRate) && numericRate > 0;
 
-    document.getElementById('detail-title').textContent = `${karat} Gold Details`;
-    document.getElementById('detail-purity').textContent = `Purity: ${purity}`;
-    panel.querySelector('.muted').textContent =
-        `Current rate: ${rate?.textContent || '—'} per gram.`;
+    const title = `${karat} Gold`;
+    const subtitle = `${purity} Fine Gold`;
 
+    document.getElementById('detail-title').textContent = title;
+    document.getElementById('detail-description').textContent = subtitle;
+    document.getElementById('detail-seal').textContent = purity;
+    document.getElementById('detail-rate').textContent = validRate ? formatGoldValue(numericRate) : '—';
+
+    [1, 5, 10].forEach(weight => {
+        document.getElementById(`value-${weight}`).textContent =
+            validRate ? formatGoldValue(numericRate * weight) : '—';
+    });
+
+    document.getElementById('full-detail-title').textContent = title;
+    document.getElementById('full-detail-subtitle').textContent = subtitle;
+    document.getElementById('full-detail-rate').textContent =
+        validRate ? formatGoldValue(numericRate) : '—';
+    document.getElementById('full-purity').textContent = purity;
+
+    [1, 5, 10].forEach(weight => {
+        document.getElementById(`full-value-${weight}`).textContent =
+            validRate ? formatGoldValue(numericRate * weight) : '—';
+    });
+
+    document.getElementById('gold-full-page').hidden = true;
+    document.getElementById('other-panel').hidden = true;
     panel.hidden = false;
     document.body.classList.add('modal-open');
-    document.getElementById('other-panel').hidden = true;
 }
 
 function closeDetails() {
     document.getElementById('details-panel').hidden = true;
     document.body.classList.remove('modal-open');
+}
+
+function openGoldFullDetails() {
+    document.getElementById('details-panel').hidden = true;
+    document.body.classList.remove('modal-open');
+    document.getElementById('gold-full-page').hidden = false;
+    window.scrollTo(0, 0);
+}
+
+function closeGoldFullDetails() {
+    document.getElementById('gold-full-page').hidden = true;
+    window.scrollTo(0, 0);
 }
 
 function closeOther() {
