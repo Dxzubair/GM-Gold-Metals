@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1424">
+    <title>GM — Gold & Metals</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">GM</div>
+            <div>
+                <h1>Gold & Metals</h1>
+                <p>PRECIOUS METALS MARKET</p>
+            </div>
+        </div>
+        <button class="icon-btn" aria-label="Notifications">♧</button>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <div>
+                <p class="eyebrow">MARKET OVERVIEW</p>
+                <h2>Gold & Silver Rates</h2>
+                <p class="muted">Live market dashboard</p>
+            </div>
+            <span class="market-status">● Market</span>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h3>Gold Rates</h3>
+                    <p>Choose purity to explore details</p>
+                </div>
+                <span class="unit">₹ / gram</span>
+            </div>
+
+            <div class="gold-grid">
+                <button class="gold-tile" onclick="showDetails('24K', '999')">
+                    <span class="gold-symbol">Au</span>
+                    <strong>24K</strong>
+                    <small>999 Purity</small>
+                    <b id="rate-24">—</b>
+                </button>
+                <button class="gold-tile" onclick="showDetails('22K', '916')">
+                    <span class="gold-symbol">Au</span>
+                    <strong>22K</strong>
+                    <small>916 Purity</small>
+                    <b id="rate-22">—</b>
+                </button>
+                <button class="gold-tile" onclick="showDetails('20K', '833')">
+                    <span class="gold-symbol">Au</span>
+                    <strong>20K</strong>
+                    <small>833 Purity</small>
+                    <b id="rate-20">—</b>
+                </button>
+                <button class="gold-tile" onclick="showDetails('18K', '750')">
+                    <span class="gold-symbol">Au</span>
+                    <strong>18K</strong>
+                    <small>750 Purity</small>
+                    <b id="rate-18">—</b>
+                </button>
+                <button class="gold-tile" onclick="showDetails('14K', '585')">
+                    <span class="gold-symbol">Au</span>
+                    <strong>14K</strong>
+                    <small>585 Purity</small>
+                    <b id="rate-14">—</b>
+                </button>
+                <button class="gold-tile" onclick="showDetails('10K', '417')">
+                    <span class="gold-symbol">Au</span>
+                    <strong>10K</strong>
+                    <small>417 Purity</small>
+                    <b id="rate-10">—</b>
+                </button>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h3>Silver Rates</h3>
+                    <p>Silver market prices</p>
+                </div>
+                <span class="unit">₹ / gram</span>
+            </div>
+            <div class="silver-card">
+                <div class="silver-symbol">Ag</div>
+                <div class="silver-info">
+                    <strong>Fine Silver</strong>
+                    <small>999 Purity</small>
+                </div>
+                <b id="rate-silver">—</b>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-heading">
+                <div>
+                    <h3>Featured Coins & Bars</h3>
+                    <p>Explore precious metal products</p>
+                </div>
+                <button class="text-btn" onclick="showSection('products')">View all →</button>
+            </div>
+
+            <div class="product-grid">
+                <button class="product-card" onclick="openProductPreview(0)">
+                    <div class="product-art gold-art">Au</div>
+                    <strong>Gold Coins</strong>
+                    <small>Explore collections</small>
+                </button>
+                <button class="product-card" onclick="openProductPreview(1)">
+                    <div class="product-art silver-art">Ag</div>
+                    <strong>Silver Coins</strong>
+                    <small>Explore collections</small>
+                </button>
+                <button class="product-card" onclick="openProductPreview(2)">
+                    <div class="product-art gold-bar">GM</div>
+                    <strong>Gold Bars</strong>
+                    <small>Explore weights</small>
+                </button>
+                <button class="product-card" onclick="openProductPreview(3)">
+                    <div class="product-art silver-bar">GM</div>
+                    <strong>Silver Bars</strong>
+                    <small>Explore weights</small>
+                </button>
+            </div>
+        </section>
+
+        <section class="section tools-section">
+            <div class="section-heading">
+                <div>
+                    <h3>Quick Tools</h3>
+                    <p>Useful market utilities</p>
+                </div>
+            </div>
+            <div class="tools-grid">
+                <button onclick="showSection('calculator')">⌗<span>Calculator</span></button>
+                <button onclick="showSection('trends')">↗<span>Market Trends</span></button>
+                <button onclick="showSection('alerts')">♧<span>Price Alerts</span></button>
+                <button onclick="showSection('purity')">◇<span>Purity Guide</span></button>
+            </div>
+        </section>
+
+        <section id="details-panel" class="details-panel" hidden>
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">GOLD PURITY DETAILS</p>
+                    <h3 id="detail-title">24K Gold</h3>
+                    <p id="detail-purity"></p>
+                </div>
+                <button class="text-btn" onclick="closeDetails()">Close ✕</button>
+            </div>
+            <p class="muted">The live rate will appear here after API integration.</p>
+        </section>
+
+        <section id="other-panel" class="details-panel" hidden>
+            <div class="section-heading">
+                <h3 id="other-title">Products</h3>
+                <button class="text-btn" onclick="closeOther()">Close ✕</button>
+            </div>
+            <div class="muted" id="other-description"></div>
+        </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="active" onclick="window.scrollTo({top:0,behavior:'smooth'})">⌂<span>Home</span></button>
+        <button onclick="showSection('rates')">◈<span>Rates</span></button>
+        <button onclick="showSection('products')">▣<span>Products</span></button>
+        <button onclick="showSection('news')">▤<span>News</span></button>
+        <button onclick="showSection('more')">☰<span>More</span></button>
+    </nav>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
