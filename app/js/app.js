@@ -17,12 +17,13 @@ function showDetails(karat, purity) {
         `Current rate: ${rate?.textContent || '—'} per gram.`;
 
     panel.hidden = false;
+    document.body.classList.add('modal-open');
     document.getElementById('other-panel').hidden = true;
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function closeDetails() {
     document.getElementById('details-panel').hidden = true;
+    document.body.classList.remove('modal-open');
 }
 
 function closeOther() {
