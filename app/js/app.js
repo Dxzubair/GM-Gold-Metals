@@ -398,84 +398,84 @@ function deleteAlert(id) {
 
 async function loadMarketRates() {
     const status = document.querySelector('.market-status');
+    const api = 'https://swarnaratna-metals-api.ethiodeploy.app/public/rates';
+
+    const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+
+    const money = value =>
+        Number.isFinite(Number(value))
+            ? '₹' + Number(value).toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 3
+            })
+            : '—';
 
     try {
         if (status) status.textContent = '● Updating market data';
 
-        const response = await fetch(
-            'https://swarnaratna-metals-api.ethiodeploy.app/public/rates',
-            { cache: 'no-store' }
-        );
-
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
+        const response = await fetch(api, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
 
         const result = await response.json();
+        if (!result.success) throw new Error('Invalid API response');
 
-        if (!result.success || !result.data) {
-            throw new Error('Invalid market data');
+        const ibja = result.sources?.IBJA;
+
+        if (ibja && ibja.status === 'last_published') {
+            setText('ibja-date', `Published: ${ibja.rate_date} · INR per gram`);
+            setText('ibja-gold-am', money(ibja.gold_999?.am));
+            setText('ibja-gold-pm', money(ibja.gold_999?.pm));
+            setText('ibja-916-am', money(ibja.gold_916?.am));
+            setText('ibja-916-pm', money(ibja.gold_916?.pm));
+            setText('ibja-silver-am', money(ibja.silver_999?.am));
+            setText('ibja-silver-pm', money(ibja.silver_999?.pm));
+            setText('ibja-status', ibja.source_label || 'Published benchmark rates');
+        } else {
+            setText('ibja-date', 'No published rates available');
+            setText('ibja-status', ibja?.message || 'Source unavailable');
         }
 
-        const rates = result.data;
+        const mcx = result.sources?.MCX;
+        setText('mcx-status', mcx?.status === 'fresh' ? 'Live futures data' : 'Verified feed unavailable');
 
-        const goldRates = {
-            'rate-24': rates.gold_24k_per_gram,
-            'rate-22': rates.gold_22k_per_gram,
-            'rate-20': rates.gold_20k_per_gram,
-            'rate-18': rates.gold_18k_per_gram
-        };
+        if (result.data) {
+            const rates = result.data;
+            const goldRates = {
+                'rate-24': rates.gold_24k_per_gram,
+                'rate-22': rates.gold_22k_per_gram,
+                'rate-20': rates.gold_20k_per_gram,
+                'rate-18': rates.gold_18k_per_gram
+            };
 
-        Object.entries(goldRates).forEach(([id, value]) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.textContent =
-                    Number.isFinite(value) && value > 0
-                        ? formatGoldValue(value)
-                        : '—';
-            }
-        });
+            Object.entries(goldRates).forEach(([id, value]) => {
+                setText(id, Number.isFinite(Number(value)) && Number(value) > 0
+                    ? formatGoldValue(Number(value)) : '—');
+            });
 
-        ['rate-14', 'rate-10'].forEach(id => {
-            const element = document.getElementById(id);
-            if (element) element.textContent = '—';
-        });
+            ['rate-14', 'rate-10'].forEach(id => setText(id, '—'));
+            setText('rate-silver', Number(rates.silver_per_gram) > 0
+                ? formatGoldValue(Number(rates.silver_per_gram)) : '—');
 
-        const silverElement = document.getElementById('rate-silver');
-        if (silverElement) {
-            silverElement.textContent =
-                Number.isFinite(rates.silver_per_gram) && rates.silver_per_gram > 0
-                    ? formatGoldValue(rates.silver_per_gram)
-                    : '—';
+            const updatedDate = new Date(rates.retrieved_at);
+            setText('market-updated', Number.isNaN(updatedDate.getTime())
+                ? 'Update time unavailable'
+                : `Updated ${updatedDate.toLocaleString('en-IN')} · ${rates.source || 'Market source'}`);
+            if (status) status.textContent = '● Verified market data';
+        } else {
+            ['rate-24', 'rate-22', 'rate-20', 'rate-18', 'rate-14', 'rate-10', 'rate-silver']
+                .forEach(id => setText(id, '—'));
+            setText('market-updated', 'Retail market rates unavailable');
+            if (status) status.textContent = '● Benchmark data available';
         }
 
-        if (status) {
-            if (result.data_status === 'fresh') {
-                status.textContent = '● Live Market';
-            } else if (result.data_status === 'market_closed') {
-                status.textContent = '● Market Closed — Last Available Price';
-            } else {
-                status.textContent = '● Market data delayed';
-            }
-        }
-const updatedElement = document.getElementById('market-updated');
-const updatedDate = new Date(rates.retrieved_at);
-
-if (updatedElement) {
-    updatedElement.textContent = Number.isNaN(updatedDate.getTime())
-        ? 'Update time unavailable'
-        : `Updated ${updatedDate.toLocaleString('en-IN', {
-            day: '2-digit',
-            month: 'short',
-            hour: '2-digit',
-            minute: '2-digit'
-        })} · ${rates.source || 'Market source'}`;
-}
-        console.log('GM market rates updated:', result);
-
+        console.log('MIZAN market sources updated:', result);
     } catch (error) {
-        console.error('GM market rates error:', error);
+        console.error('MIZAN market rates error:', error);
         if (status) status.textContent = '● Market unavailable';
+        setText('ibja-status', 'Unable to load source');
     }
 }
 
