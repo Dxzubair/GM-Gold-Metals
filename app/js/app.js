@@ -396,8 +396,74 @@ function deleteAlert(id) {
     renderSavedAlerts();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+async function loadMarketRates() {
     const status = document.querySelector('.market-status');
-    if (status) status.textContent = '● Awaiting market data';
+
+    try {
+        if (status) status.textContent = '● Updating market data';
+
+        const response = await fetch(
+            'https://swarnaratna-metals-api.ethiodeploy.app/public/rates',
+            { cache: 'no-store' }
+        );
+
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (!result.success || !result.data) {
+            throw new Error('Invalid market data');
+        }
+
+        const rates = result.data;
+
+        const goldRates = {
+            'rate-24': rates.gold_24k_per_gram,
+            'rate-22': rates.gold_22k_per_gram,
+            'rate-20': rates.gold_20k_per_gram,
+            'rate-18': rates.gold_18k_per_gram
+        };
+
+        Object.entries(goldRates).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent =
+                    Number.isFinite(value) && value > 0
+                        ? formatGoldValue(value)
+                        : '—';
+            }
+        });
+
+        ['rate-14', 'rate-10'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = '—';
+        });
+
+        const silverElement = document.getElementById('rate-silver');
+        if (silverElement) {
+            silverElement.textContent =
+                Number.isFinite(rates.silver_per_gram) && rates.silver_per_gram > 0
+                    ? formatGoldValue(rates.silver_per_gram)
+                    : '—';
+        }
+
+        if (status) {
+            status.textContent = result.data_status === 'fresh'
+                ? '● Live Market'
+                : '● Market data delayed';
+        }
+
+        console.log('GM market rates updated:', result);
+
+    } catch (error) {
+        console.error('GM market rates error:', error);
+        if (status) status.textContent = '● Market unavailable';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadMarketRates();
     console.log('GM — Gold & Metals initialized.');
 });
