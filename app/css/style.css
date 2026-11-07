@@ -575,3 +575,73 @@ body.modal-open::before {
 @media(min-width:600px) {
     .details-panel {left:50%;right:auto;width:min(100%,520px);transform:translateX(-50%);border-radius:27px 27px 0 0;}
 }
+
+
+/* MIZAN benchmark rate cards */
+.benchmark-rates {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin: 24px 0 30px;
+}
+
+.benchmark-card {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid rgba(212, 175, 90, 0.25);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #17263a, #101b2b);
+    color: #f4f6fa;
+}
+
+.benchmark-card h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.benchmark-card p {
+    margin: 0 0 16px;
+    color: #9eacc0;
+    font-size: 13px;
+}
+
+.benchmark-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    font-size: 14px;
+}
+
+.benchmark-row span {
+    color: #aebbd0;
+}
+
+.benchmark-row b {
+    color: #f0c96e;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.benchmark-card small {
+    display: block;
+    margin-top: 14px;
+    color: #91a0b5;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+    .benchmark-rates {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 20px 0 26px;
+    }
+
+    .benchmark-card {
+        padding: 17px;
+    }
+}
