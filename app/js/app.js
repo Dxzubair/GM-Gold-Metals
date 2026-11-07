@@ -454,7 +454,19 @@ async function loadMarketRates() {
                 ? '● Live Market'
                 : '● Market data delayed';
         }
+const updatedElement = document.getElementById('market-updated');
+const updatedDate = new Date(rates.retrieved_at);
 
+if (updatedElement) {
+    updatedElement.textContent = Number.isNaN(updatedDate.getTime())
+        ? 'Update time unavailable'
+        : `Updated ${updatedDate.toLocaleString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit'
+        })} · ${rates.source || 'Market source'}`;
+}
         console.log('GM market rates updated:', result);
 
     } catch (error) {
@@ -465,5 +477,6 @@ async function loadMarketRates() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadMarketRates();
+    setInterval(loadMarketRates, 5 * 60 * 1000);
     console.log('GM — Gold & Metals initialized.');
 });
