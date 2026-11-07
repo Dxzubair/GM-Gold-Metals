@@ -645,3 +645,62 @@ body.modal-open::before {
         padding: 17px;
     }
 }
+
+
+/* GST-inclusive IBJA breakdown */
+.gst-note {
+    margin: 0 0 14px !important;
+    color: #e8c66f !important;
+    font-size: 13px !important;
+}
+.gst-purity {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,.09);
+}
+.gst-purity h4 {
+    margin: 0 0 12px;
+    color: #f0c96e;
+    font-size: 16px;
+}
+.gst-purity h4 small {
+    color: #91a0b5;
+    font-weight: 400;
+}
+.gst-sessions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+.gst-session {
+    min-width: 0;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(5, 13, 25, .35);
+}
+.gst-session > b {
+    display: block;
+    margin-bottom: 9px;
+    color: #e8c66f;
+}
+.gst-session div {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    margin: 6px 0;
+    font-size: 12px;
+}
+.gst-session div span {
+    color: #aebbd0;
+}
+.gst-session div strong {
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+.gst-session .gst-total {
+    padding-top: 8px;
+    margin-top: 9px;
+    border-top: 1px solid rgba(255,255,255,.12);
+}
+.gst-session .gst-total strong {
+    color: #f0c96e;
+}

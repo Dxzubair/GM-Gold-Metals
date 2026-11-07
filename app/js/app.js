@@ -426,12 +426,50 @@ async function loadMarketRates() {
 
         if (ibja && ibja.status === 'last_published') {
             setText('ibja-date', `Published: ${ibja.rate_date} · INR per gram`);
-            setText('ibja-gold-am', money(ibja.gold_999?.am));
-            setText('ibja-gold-pm', money(ibja.gold_999?.pm));
-            setText('ibja-916-am', money(ibja.gold_916?.am));
-            setText('ibja-916-pm', money(ibja.gold_916?.pm));
-            setText('ibja-silver-am', money(ibja.silver_999?.am));
-            setText('ibja-silver-pm', money(ibja.silver_999?.pm));
+            const purityRates = [
+                ['Gold 999', ibja.gold_999],
+                ['Gold 995', ibja.gold_995],
+                ['Gold 916', ibja.gold_916],
+                ['Gold 750', ibja.gold_750],
+                ['Gold 585', ibja.gold_585],
+                ['Silver 999', ibja.silver_999]
+            ];
+
+            const details = document.getElementById('ibja-rate-details');
+            if (details) {
+                details.innerHTML = purityRates.map(([label, sessions]) => {
+                    const digits = label.startsWith('Silver') ? 3 : 2;
+                    const fmt = value => Number(value).toLocaleString('en-IN', {
+                        minimumFractionDigits: digits,
+                        maximumFractionDigits: digits
+                    });
+
+                    const sessionBlock = (name, baseValue) => {
+                        const base = Number(baseValue);
+                        if (!Number.isFinite(base) || base <= 0) {
+                            return `<div class="gst-session"><b>${name}</b><span>Rate unavailable</span></div>`;
+                        }
+                        const gst = Math.round(base * 0.03 * 100) / 100;
+                        const total = Math.round((base + gst) * 100) / 100;
+                        return `
+                            <div class="gst-session">
+                                <b>${name}</b>
+                                <div><span>Base</span><strong>₹${fmt(base)}</strong></div>
+                                <div><span>GST 3%</span><strong>₹${fmt(gst)}</strong></div>
+                                <div class="gst-total"><span>Including GST</span><strong>₹${fmt(total)}</strong></div>
+                            </div>`;
+                    };
+
+                    return `
+                        <section class="gst-purity">
+                            <h4>${label} <small>per gram</small></h4>
+                            <div class="gst-sessions">
+                                ${sessionBlock('AM', sessions?.am)}
+                                ${sessionBlock('PM', sessions?.pm)}
+                            </div>
+                        </section>`;
+                }).join('');
+            }
             setText('ibja-status', ibja.source_label || 'Published benchmark rates');
         } else {
             setText('ibja-date', 'No published rates available');
