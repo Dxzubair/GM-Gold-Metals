@@ -450,9 +450,13 @@ async function loadMarketRates() {
         }
 
         if (status) {
-            status.textContent = result.data_status === 'fresh'
-                ? '● Live Market'
-                : '● Market data delayed';
+            if (result.data_status === 'fresh') {
+                status.textContent = '● Live Market';
+            } else if (result.data_status === 'market_closed') {
+                status.textContent = '● Market Closed — Last Available Price';
+            } else {
+                status.textContent = '● Market data delayed';
+            }
         }
 const updatedElement = document.getElementById('market-updated');
 const updatedDate = new Date(rates.retrieved_at);
