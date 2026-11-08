@@ -435,45 +435,43 @@ async function loadMarketRates() {
                 ['Silver 999', ibja.silver_999]
             ];
 
-            const details = document.getElementById('ibja-rate-details');
-            if (details) {
-                details.innerHTML = purityRates.map(([label, sessions]) => {
-                    const digits = label.startsWith('Silver') ? 3 : 2;
-                    const fmt = value => Number(value).toLocaleString('en-IN', {
-                        minimumFractionDigits: digits,
-                        maximumFractionDigits: digits
-                    });
+            const html = purityRates.map(([name, rate]) => {
+                const value = rate?.pm ?? rate?.am;
+                if (value == null) return '';
 
-                    const sessionBlock = (name, baseValue) => {
-                        const base = Number(baseValue);
-                        if (!Number.isFinite(base) || base <= 0) {
-                            return `<div class="gst-session"><b>${name}</b><span>Rate unavailable</span></div>`;
-                        }
-                        const gst = Math.round(base * 0.03 * 100) / 100;
-                        const total = Math.round((base + gst) * 100) / 100;
-                        return `
+                const adjusted = Number(value) * 1.03;
+
+                return `
+                    <div class="gst-purity">
+                        <strong>${name}</strong>
+                        <div class="gst-sessions">
                             <div class="gst-session">
-                                <b>${name}</b>
-                                <div><span>Base</span><strong>₹${fmt(base)}</strong></div>
-                                <div><span>GST 3%</span><strong>₹${fmt(gst)}</strong></div>
-                                <div class="gst-total"><span>Including GST</span><strong>₹${fmt(total)}</strong></div>
-                            </div>`;
-                    };
-
-                    return `
-                        <section class="gst-purity">
-                            <h4>${label} <small>per gram</small></h4>
-                            <div class="gst-sessions">
-                                ${sessionBlock('AM', sessions?.am)}
-                                ${sessionBlock('PM', sessions?.pm)}
+                                <span>IBJA</span>
+                                <strong>₹${adjusted.toFixed(2)}</strong>
                             </div>
-                        </section>`;
-                }).join('');
-            }
-            setText('ibja-status', ibja.source_label || 'Published benchmark rates');
-        } else {
-            setText('ibja-date', 'No published rates available');
-            setText('ibja-status', ibja?.message || 'Source unavailable');
+                        </div>
+                    </div>`;
+            }).join('');
+
+            const mcxHtml = `
+                <div class="gst-purity">
+                    <strong>MCX Futures</strong>
+                    <div class="gst-sessions">
+                        <div class="gst-session">
+                            <span>Gold MCX price</span>
+                            <strong>—</strong>
+                        </div>
+                        <div class="gst-session">
+                            <span>Silver MCX price</span>
+                            <strong>—</strong>
+                        </div>
+                    </div>
+                </div>`;
+
+            document.getElementById('ibja-rate-details').innerHTML =
+                (html || '<p>Published rates unavailable</p>') + mcxHtml;
+
+            setText('ibja-status', `Published: ${ibja.rate_date || 'Latest available'}`);
         }
 
         const mcx = result.sources?.MCX;
