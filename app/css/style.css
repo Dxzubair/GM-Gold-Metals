@@ -704,3 +704,35 @@ body.modal-open::before {
 .gst-session .gst-total strong {
     color: #f0c96e;
 }
+
+/* MIZAN: Updated IBJA and MCX single-column rate layout */
+.gst-sessions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+}
+
+.gst-session {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(5, 13, 25, .45);
+}
+
+.gst-session > span {
+    color: #aebbd0;
+    font-size: 14px;
+}
+
+.gst-session > strong {
+    color: #f0c96e;
+    font-size: 16px;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
