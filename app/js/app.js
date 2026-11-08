@@ -440,6 +440,10 @@ async function loadMarketRates() {
                 if (value == null) return '';
 
                 const adjusted = Number(value) * 1.03;
+                const formatted = adjusted.toLocaleString('en-IN', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
 
                 return `
                     <div class="gst-purity">
@@ -447,7 +451,10 @@ async function loadMarketRates() {
                         <div class="gst-sessions">
                             <div class="gst-session">
                                 <span>IBJA</span>
-                                <strong>₹${adjusted.toFixed(2)}</strong>
+                                <strong>₹${adjusted.toLocaleString('en-IN', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })}</strong>
                             </div>
                         </div>
                     </div>`;
