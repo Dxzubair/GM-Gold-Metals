@@ -453,36 +453,24 @@ async function loadMarketRates() {
                         <strong>${name}</strong>
                         <div class="gst-sessions">
                             <div class="gst-session">
-                                <span>IBJA</span>
+                                <span>IBJA + 3%</span>
                                 <strong>₹${formatted}</strong>
                             </div>
                         </div>
                     </div>`;
             }).join('');
 
-            const mcxHtml = `
-                <div class="gst-purity">
-                    <strong>MCX Futures</strong>
-                    <div class="gst-sessions">
-                        <div class="gst-session">
-                            <span>Gold MCX price</span>
-                            <strong>—</strong>
-                        </div>
-                        <div class="gst-session">
-                            <span>Silver MCX price</span>
-                            <strong>—</strong>
-                        </div>
-                    </div>
-                </div>`;
-
             document.getElementById('ibja-rate-details').innerHTML =
-                (html || '<p>Published rates unavailable</p>') + mcxHtml;
+                html || '<p>Published rates unavailable</p>';
 
-            setText('ibja-status', `Published: ${ibja.rate_date || 'Latest available'}`);
+            setText(
+                'ibja-status',
+                `Published benchmark · Displayed values include 3% adjustment`
+            );
         }
 
         const mcx = result.sources?.MCX;
-        setText('mcx-status', mcx?.status === 'fresh' ? 'Live futures data' : 'Verified feed unavailable');
+        setText('mcx-status', mcx?.status === 'fresh' ? 'Live futures data' : 'No verified feed connected');
 
         if (result.data) {
             const rates = result.data;
@@ -506,7 +494,12 @@ async function loadMarketRates() {
             setText('market-updated', Number.isNaN(updatedDate.getTime())
                 ? 'Update time unavailable'
                 : `Updated ${updatedDate.toLocaleString('en-IN')} · ${rates.source || 'Market source'}`);
-            if (status) status.textContent = '● Verified market data';
+            if (status) {
+                const source = String(rates.source || 'Unknown').toUpperCase();
+                status.textContent = source === 'CORGANO'
+                    ? '● Reference data · CORGANO'
+                    : `● Market data · ${source}`;
+            }
         } else {
             ['rate-24', 'rate-22', 'rate-20', 'rate-18', 'rate-14', 'rate-10', 'rate-silver']
                 .forEach(id => setText(id, '—'));
